@@ -19,6 +19,9 @@ public class Archer  implements Comparable<Archer> {
     private String lastName;
     private static int lastId = 100000;
 
+    private static int MAX_TOPROUND = 10;
+    private static int MIN_TOPROUND = 8;
+
     private int [][] scores = new int [MAX_ROUNDS][MAX_ARROWS]; // Scored attribute is a 2D array where the first box is the round and 2nd box is the arrows.
 
     /**
@@ -95,19 +98,33 @@ public class Archer  implements Comparable<Archer> {
         weightedScoreSum -= scoreCount[0] * 10; // Calculates the penalty of the amount of missed arrows to the sum.
         return weightedScoreSum;
     }
-    /*
-    Aantal -  X
-    10      - x20
-    9       - x16
-    8       - x13
-    7       - x10
-    6       - x8
-    5       - x6
-    4       - x4
-    3       - x3
-    2       - x2
-    1       - x1
-     */
+
+
+    // Method to calculate the amount oif 'Top Rounds'. Only scores of 8, 9 & 10 are valid here.
+    public int getTopRounds() {
+        int topRounds = 0;
+        for (int[] roundScores : scores) {
+            for (int score : roundScores) {
+                if (score >= MIN_TOPROUND && score <= MAX_TOPROUND) {
+                    topRounds++;
+                }
+            }
+        }
+        return topRounds;
+    }
+
+    // Calculates the amount of 10 scores in case of a tiebreaker.
+    public int getTenScores() {
+        int amountOfTens = 0;
+        for (int[] roundScores : scores) {
+            for (int score : roundScores) {
+                if (score == MAX_TOPROUND) {
+                    amountOfTens++;
+                }
+            }
+        }
+        return amountOfTens;
+    }
 
 
     /**
