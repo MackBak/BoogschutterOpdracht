@@ -19,8 +19,8 @@ public class Archer  implements Comparable<Archer> {
     private String lastName;
     private static int lastId = 100000;
 
-    private static int MAX_TOPROUND = 10;
-    private static int MIN_TOPROUND = 8;
+    private static final int MAX_TOPROUND = 10;
+    private static final int MIN_TOPROUND = 8;
 
     private int [][] scores = new int [MAX_ROUNDS][MAX_ARROWS]; // Scored attribute is a 2D array where the first box is the round and 2nd box is the arrows.
 
@@ -78,7 +78,6 @@ public class Archer  implements Comparable<Archer> {
         return totalScore;
     }
 
-
     /**
      * @return The weighted score, see documentation.
      */
@@ -100,33 +99,6 @@ public class Archer  implements Comparable<Archer> {
     }
 
 
-    // Method to calculate the amount oif 'Top Rounds'. Only scores of 8, 9 & 10 are valid here.
-    public int getTopRounds() {
-        int topRounds = 0;
-        for (int[] roundScores : scores) {
-            for (int score : roundScores) {
-                if (score >= MIN_TOPROUND && score <= MAX_TOPROUND) {
-                    topRounds++;
-                }
-            }
-        }
-        return topRounds;
-    }
-
-    // Calculates the amount of 10 scores in case of a tiebreaker.
-    public int getTenScores() {
-        int amountOfTens = 0;
-        for (int[] roundScores : scores) {
-            for (int score : roundScores) {
-                if (score == MAX_TOPROUND) {
-                    amountOfTens++;
-                }
-            }
-        }
-        return amountOfTens;
-    }
-
-
     /**
      * This methods creates a List of archers.
      *
@@ -141,6 +113,39 @@ public class Archer  implements Comparable<Archer> {
             archers.add(archer);
         }
         return archers;
+    }
+
+
+
+    /**
+     * @return The amount of rounds with 'Top Rounds'. Only scores between 8 - 10 are valid.
+     */
+    public int getTopRounds() {
+        int topRounds = 0;
+        for (int[] roundScores : scores) {
+            for (int score : roundScores) {
+                if (score >= MIN_TOPROUND && score <= MAX_TOPROUND) {
+                    topRounds++;
+                }
+            }
+        }
+        return topRounds;
+    }
+
+    /**
+     * @return Calculates the amount of max (10) scores in case the getTopRounds requires a tiebreaker.
+     */
+    // Calculates the amount of 10 scores in case of a tiebreaker.
+    public int getTenScores() {
+        int amountOfTens = 0;
+        for (int[] roundScores : scores) {
+            for (int score : roundScores) {
+                if (score == MAX_TOPROUND) {
+                    amountOfTens++;
+                }
+            }
+        }
+        return amountOfTens;
     }
 
     public int getId() {
@@ -175,39 +180,6 @@ public class Archer  implements Comparable<Archer> {
         return Integer.compare(this.id, otherArcher.id);
     }
 
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public static int getLastId() {
-        return lastId;
-    }
-
-    public static void setLastId(int lastId) {
-        Archer.lastId = lastId;
-    }
-
-    public int[][] getScores() {
-        return scores;
-    }
-
-    public void setScores(int[][] scores) {
-        this.scores = scores;
-    }
-
     public static class LastNameComparator implements Comparator<Archer> {
         @Override
         public int compare(Archer a1, Archer a2) {
@@ -228,6 +200,16 @@ public class Archer  implements Comparable<Archer> {
             if (totalScoreComparison != 0) {
                 return totalScoreComparison; // Returns when totalScore is different.
             } else return Integer.compare(a2.getWeightedScore(), a1.getWeightedScore()); // Returns the higher WeightedScore first if totalScore is the same.
+        }
+    }
+
+    public static class Schema2Comparator implements Comparator<Archer> {
+        @Override
+        public int compare(Archer a1, Archer a2) {
+            int topRoundsComparison = Integer.compare(a2.getTopRounds(), a1.getTopRounds()); // Compares the amount of top rounds between the archers.
+            if (topRoundsComparison != 0) {
+                return topRoundsComparison;
+            } else return Integer.compare(a2.getTenScores(), a1.getTenScores()); // Returns the top player based on the most amount of 10s scored if comparison above is equal.
         }
     }
 }

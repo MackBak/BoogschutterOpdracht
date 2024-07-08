@@ -36,23 +36,10 @@ public class Launcher {
 
         System.out.println();
         System.out.println("------- sorteren op top rondes (schema 2)---------");
-        Collections.sort(unsortedArcherList, (a1, a2) -> {
-            int topRoundsComparison = Integer.compare(a2.getTopRounds(), a1.getTopRounds());
-            if (topRoundsComparison != 0) {
-                return topRoundsComparison;
-            } else {
-                int tenComparison = Integer.compare(a2.getTenScores(), a1.getTenScores());
-                if (tenComparison != 0) {
-                    return tenComparison;
-                } else {
-                    return Integer.compare(a1.getId(), a2.getId());
-                }
-            }
-        });
+        Collections.sort(unsortedArcherList, new Archer.Schema2Comparator());
         for (Archer archer : unsortedArcherList) {
             System.out.println(archer);
         }
-
 
         System.out.println();
         System.out.println("------- efficiëntie van sorteer algoritmes ---------");
