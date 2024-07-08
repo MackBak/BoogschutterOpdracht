@@ -10,7 +10,7 @@ import java.util.*;
  * testing purposes in which case the reason why you need that constructor must be contained in a very clear manner
  * in your report.
  */
-public class Archer {
+public class Archer  implements Comparable<Archer> {
     public static int MAX_ARROWS = 3;
     public static int MAX_ROUNDS = 10;
     private static Random randomizer = new Random();
@@ -125,7 +125,6 @@ public class Archer {
             archers.add(archer);
         }
         return archers;
-
     }
 
     public int getId() {
@@ -153,5 +152,66 @@ public class Archer {
     @Override
     public String toString() {
         return getId() + " (" + getTotalScore() + " / " + getWeightedScore() + ") " + firstName + " " + lastName;
+    }
+
+    @Override
+    public int compareTo(Archer otherArcher) {
+        return Integer.compare(this.id, otherArcher.id);
+    }
+
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public static int getLastId() {
+        return lastId;
+    }
+
+    public static void setLastId(int lastId) {
+        Archer.lastId = lastId;
+    }
+
+    public int[][] getScores() {
+        return scores;
+    }
+
+    public void setScores(int[][] scores) {
+        this.scores = scores;
+    }
+
+    public static class LastNameComparator implements Comparator<Archer> {
+        @Override
+        public int compare(Archer a1, Archer a2) {
+            int lastNameComparison = a1.lastName.compareToIgnoreCase(a2.lastName);
+            if (lastNameComparison != 0) {
+                return lastNameComparison; // Returns the lower ranking lastName.
+            } else {
+                return a1.firstName.compareToIgnoreCase(a2.firstName); // Returns based on firstName is lastName is the same.
+            }
+        }
+    }
+
+    public static class schema1Comparator implements Comparator<Archer> {
+        // Method that sorts the Archers based on totalScore and if that is equal on Weighted score. If that is equal the default comparator is done which is already done by ID.
+        @Override
+        public int compare(Archer a1, Archer a2) {
+            int totalScoreComparison = Integer.compare(a2.getTotalScore(), a1.getTotalScore());
+            if (totalScoreComparison != 0) {
+                return totalScoreComparison; // Returns when totalScore is different.
+            } else return Integer.compare(a2.getWeightedScore(), a1.getWeightedScore()); // Returns the higher WeightedScore first if totalScore is the same.
+        }
     }
 }

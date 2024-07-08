@@ -1,6 +1,8 @@
 package nl.hva.ict.se.ads;
 
+import javax.swing.*;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Launcher {
@@ -13,15 +15,24 @@ public class Launcher {
 
         System.out.println();
         System.out.println("------- sorteren op Id ---------");
-        // TODO
+        Collections.sort(unsortedArcherList);
+        for (Archer archer : unsortedArcherList) {
+            System.out.println(archer);
+        }
 
         System.out.println();
         System.out.println("------- sorteren op achternaam ---------");
-        // TODO
+        Collections.sort(unsortedArcherList, new Archer.LastNameComparator());
+        for (Archer archer : unsortedArcherList) {
+            System.out.println(archer);
+        }
 
         System.out.println();
         System.out.println("------- sorteren op hoogste score (schema 1) ---------");
-        // TODO
+        Collections.sort(unsortedArcherList, new Archer.schema1Comparator());
+        for (Archer archer : unsortedArcherList) {
+            System.out.println(archer);
+        }
 
         System.out.println();
         System.out.println("------- sorteren op top rondes (schema 2)---------");
