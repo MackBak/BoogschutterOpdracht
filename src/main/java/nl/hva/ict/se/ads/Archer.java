@@ -18,7 +18,8 @@ public class Archer {
     private String firstName;
     private String lastName;
     private static int lastId = 100000;
-    // TODO: add an attribute for the scores of all arrows of all rounds. Hint: use 2d-array
+
+    private int [][] scores = new int [MAX_ROUNDS][MAX_ARROWS]; // Scored attribute is a 2D array where the first box is the round and 2nd box is the arrows.
 
 
     /**
@@ -53,24 +54,62 @@ public class Archer {
      * @param points the points shot during the round.
      */
     public void registerScoreForRound(int round, int[] points) {
-        // TODO implement
+        if (round < 0 || round > MAX_ROUNDS) { // Checks if round is not negative or exceeds the max rounds
+            throw new IllegalArgumentException("Round numbers are wrong");
+        }
+        if (points.length != MAX_ARROWS) { // If length of points is higher than the arrow count also throws an exception.
+            throw new IllegalArgumentException("Number of points is wrong");
+        }
+        scores[round] = Arrays.copyOf(points, MAX_ARROWS); // Creates a copy of the points array. Then future code will use this instead of changing the stored scores after a match.
     }
 
     /**
      * @return The total score of an Archer, so the sum of all arrows of all rounds
      */
     public int getTotalScore() {
-        // TODO implement
-        return 0;
+        int totalScore = 0;
+        for (int rndCounter = 0; rndCounter < MAX_ROUNDS; rndCounter++) {
+            for (int arrowCounter = 0; arrowCounter < MAX_ARROWS; arrowCounter++) {
+                totalScore += scores[rndCounter][arrowCounter];
+            }
+        }
+        return totalScore;
     }
+
 
     /**
      * @return The weighted score, see documentation.
      */
     public int getWeightedScore() {
-        // TODO implement
-        return 0;
+        int weightedScoreSum = 0;
+        int[] scoreCount = new int[11]; // Array which counts the occurences of each score.
+        int [] multipliers = {0, 1, 2, 3, 4, 6, 8 , 10, 13, 16, 20}; // Score multipliers as described in assignment. This is ordered by multiplier from 0 - 10.
+
+        for (int[] roundScores : scores) {  // Iterates over each array of scores in the scores collection.
+            for (int score : roundScores) { // Iterates over each individual score in roundScores.
+                scoreCount[score]++;        // Increases the count of a score if it's found in roundScores. With this I can collect how often a specific score is registered.
+            }
+        }
+        for (int i = 0; i < scoreCount.length; i++) {           // Loops until the end until scoreCount.length is reached.
+            weightedScoreSum += scoreCount[i] * multipliers[i]; // Multiplies the scoreCount with the multiplier and adds it to the sum.
+        }
+        weightedScoreSum -= scoreCount[0] * 10; // Calculates the penalty of the amount of missed arrows to the sum.
+        return weightedScoreSum;
     }
+    /*
+    Aantal -  X
+    10      - x20
+    9       - x16
+    8       - x13
+    7       - x10
+    6       - x8
+    5       - x6
+    4       - x4
+    3       - x3
+    2       - x2
+    1       - x1
+     */
+
 
     /**
      * This methods creates a List of archers.
@@ -113,7 +152,6 @@ public class Archer {
 
     @Override
     public String toString() {
-        return "To do + "
+        return getId() + " (" + getTotalScore() + " / " + getWeightedScore() + ") " + firstName + " " + lastName;
     }
-
 }
