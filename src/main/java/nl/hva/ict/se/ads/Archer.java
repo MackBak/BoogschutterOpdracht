@@ -21,7 +21,6 @@ public class Archer  implements Comparable<Archer> {
 
     private int [][] scores = new int [MAX_ROUNDS][MAX_ARROWS]; // Scored attribute is a 2D array where the first box is the round and 2nd box is the arrows.
 
-
     /**
      * Constructs a new instance of bowman and assigns a unique ID to the instance. The ID is not allowed to ever
      * change during the lifetime of the instance! For this you need to use the correct Java keyword.Each new instance
